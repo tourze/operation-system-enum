@@ -1,0 +1,23 @@
+{
+  "name": "tourze/operation-system-enum",
+  "description": "Operation System Enum",
+  "license": "MIT",
+  "require": {
+    "php": "^8.1",
+    "tourze/enum-extra": "~0.0.5"
+  },
+  "require-dev": {
+    "phpstan/phpstan": "^2.1",
+    "phpunit/phpunit": "^10.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Tourze\\OperationSystemEnum\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tourze\\OperationSystemEnum\\Tests\\": "tests"
+    }
+  }
+}
