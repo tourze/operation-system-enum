@@ -38,17 +38,18 @@ enum Platform: string implements Labelable, Itemable, Selectable
     public static function mixFrom(string $value): ?Platform
     {
         $value = strtoupper($value);
-        if ($value === 'MAC' || $value === 'DARWIN') {
+        if ('MAC' === $value || 'DARWIN' === $value) {
             return Platform::MACOS;
         }
-        if ($value === 'WIN' || $value === 'WIN32') {
+        if ('WIN' === $value || 'WIN32' === $value) {
             return Platform::WINDOWS;
         }
 
         $platform = Platform::tryFrom($value);
-        if ($platform !== null) {
+        if (null !== $platform) {
             return $platform;
         }
+
         return null;
     }
 }

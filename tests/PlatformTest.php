@@ -2,15 +2,20 @@
 
 namespace Tourze\OperationSystemEnum\Tests;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tourze\EnumExtra\Itemable;
 use Tourze\EnumExtra\Labelable;
 use Tourze\EnumExtra\Selectable;
 use Tourze\OperationSystemEnum\Platform;
+use Tourze\PHPUnitEnum\AbstractEnumTestCase;
 
-class PlatformTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(Platform::class)]
+final class PlatformTest extends AbstractEnumTestCase
 {
-    public function test_enum_values_are_correct(): void
+    public function testEnumValuesAreCorrect(): void
     {
         $this->assertEquals('', Platform::EMPTY->value);
         $this->assertEquals('WINDOWS', Platform::WINDOWS->value);
@@ -20,7 +25,7 @@ class PlatformTest extends TestCase
         $this->assertEquals('MACOS', Platform::MACOS->value);
     }
 
-    public function test_all_cases_exist(): void
+    public function testAllCasesExist(): void
     {
         $expectedCases = [
             'EMPTY',
@@ -28,16 +33,16 @@ class PlatformTest extends TestCase
             'ANDROID',
             'IOS',
             'ROUTER',
-            'MACOS'
+            'MACOS',
         ];
 
-        $actualCases = array_map(fn($case) => $case->name, Platform::cases());
+        $actualCases = array_map(fn ($case) => $case->name, Platform::cases());
 
         $this->assertEquals($expectedCases, $actualCases);
         $this->assertCount(6, Platform::cases());
     }
 
-    public function test_getLabel_returns_correct_labels(): void
+    public function testGetLabelReturnsCorrectLabels(): void
     {
         $this->assertEquals('Windows', Platform::WINDOWS->getLabel());
         $this->assertEquals('安卓', Platform::ANDROID->getLabel());
@@ -47,7 +52,7 @@ class PlatformTest extends TestCase
         $this->assertEquals('未知', Platform::EMPTY->getLabel());
     }
 
-    public function test_mixFrom_with_standard_values(): void
+    public function testMixFromWithStandardValues(): void
     {
         $this->assertEquals(Platform::WINDOWS, Platform::mixFrom('WINDOWS'));
         $this->assertEquals(Platform::ANDROID, Platform::mixFrom('ANDROID'));
@@ -57,7 +62,7 @@ class PlatformTest extends TestCase
         $this->assertEquals(Platform::EMPTY, Platform::mixFrom(''));
     }
 
-    public function test_mixFrom_with_lowercase_input(): void
+    public function testMixFromWithLowercaseInput(): void
     {
         $this->assertEquals(Platform::WINDOWS, Platform::mixFrom('windows'));
         $this->assertEquals(Platform::ANDROID, Platform::mixFrom('android'));
@@ -66,7 +71,7 @@ class PlatformTest extends TestCase
         $this->assertEquals(Platform::ROUTER, Platform::mixFrom('router'));
     }
 
-    public function test_mixFrom_with_mac_compatibility(): void
+    public function testMixFromWithMacCompatibility(): void
     {
         $this->assertEquals(Platform::MACOS, Platform::mixFrom('MAC'));
         $this->assertEquals(Platform::MACOS, Platform::mixFrom('mac'));
@@ -74,7 +79,7 @@ class PlatformTest extends TestCase
         $this->assertEquals(Platform::MACOS, Platform::mixFrom('darwin'));
     }
 
-    public function test_mixFrom_with_windows_compatibility(): void
+    public function testMixFromWithWindowsCompatibility(): void
     {
         $this->assertEquals(Platform::WINDOWS, Platform::mixFrom('WIN'));
         $this->assertEquals(Platform::WINDOWS, Platform::mixFrom('win'));
@@ -82,7 +87,7 @@ class PlatformTest extends TestCase
         $this->assertEquals(Platform::WINDOWS, Platform::mixFrom('win32'));
     }
 
-    public function test_mixFrom_with_invalid_values(): void
+    public function testMixFromWithInvalidValues(): void
     {
         $this->assertNull(Platform::mixFrom('INVALID'));
         $this->assertNull(Platform::mixFrom('LINUX'));
@@ -91,7 +96,7 @@ class PlatformTest extends TestCase
         $this->assertNull(Platform::mixFrom('!@#'));
     }
 
-    public function test_mixFrom_with_special_characters(): void
+    public function testMixFromWithSpecialCharacters(): void
     {
         $this->assertNull(Platform::mixFrom(' '));
         $this->assertNull(Platform::mixFrom('\t'));
@@ -100,7 +105,7 @@ class PlatformTest extends TestCase
         $this->assertNull(Platform::mixFrom('MAC-OS'));
     }
 
-    public function test_mixFrom_with_mixed_case(): void
+    public function testMixFromWithMixedCase(): void
     {
         $this->assertEquals(Platform::WINDOWS, Platform::mixFrom('Windows'));
         $this->assertEquals(Platform::ANDROID, Platform::mixFrom('Android'));
@@ -110,7 +115,7 @@ class PlatformTest extends TestCase
         $this->assertEquals(Platform::WINDOWS, Platform::mixFrom('Win'));
     }
 
-    public function test_toSelectItem_returns_correct_format(): void
+    public function testToSelectItemReturnsCorrectFormat(): void
     {
         $expected = [
             'label' => 'Windows',
@@ -131,7 +136,7 @@ class PlatformTest extends TestCase
         $this->assertEquals($expectedEmpty, Platform::EMPTY->toSelectItem());
     }
 
-    public function test_toArray_returns_correct_format(): void
+    public function testToArrayReturnsCorrectFormat(): void
     {
         $expected = [
             'value' => 'WINDOWS',
@@ -148,7 +153,7 @@ class PlatformTest extends TestCase
         $this->assertEquals($expectedAndroid, Platform::ANDROID->toArray());
     }
 
-    public function test_genOptions_returns_all_cases(): void
+    public function testGenOptionsReturnsAllCases(): void
     {
         $options = Platform::genOptions();
 
@@ -168,7 +173,7 @@ class PlatformTest extends TestCase
         $this->assertEquals('', $firstOption['value']);
     }
 
-    public function test_genOptions_with_environment_filter(): void
+    public function testGenOptionsWithEnvironmentFilter(): void
     {
         // 测试环境变量过滤功能
         $envKey = 'enum-display:' . Platform::class . '-WINDOWS';
@@ -177,14 +182,14 @@ class PlatformTest extends TestCase
         $options = Platform::genOptions();
 
         // 检查 WINDOWS 是否被过滤掉
-        $windowsOptions = array_filter($options, fn($option) => $option['value'] === 'WINDOWS');
+        $windowsOptions = array_filter($options, fn ($option) => 'WINDOWS' === $option['value']);
         $this->assertEmpty($windowsOptions);
 
         // 清理环境变量
         unset($_ENV[$envKey]);
     }
 
-    public function test_implements_required_interfaces(): void
+    public function testImplementsRequiredInterfaces(): void
     {
         $reflection = new \ReflectionClass(Platform::class);
 
@@ -193,7 +198,7 @@ class PlatformTest extends TestCase
         $this->assertTrue($reflection->implementsInterface(Selectable::class));
     }
 
-    public function test_uses_required_traits(): void
+    public function testUsesRequiredTraits(): void
     {
         $reflection = new \ReflectionClass(Platform::class);
         $traitNames = array_keys($reflection->getTraits());
@@ -202,26 +207,26 @@ class PlatformTest extends TestCase
         $this->assertContains('Tourze\EnumExtra\SelectTrait', $traitNames);
     }
 
-    public function test_all_labels_are_not_empty(): void
+    public function testAllLabelsAreNotEmpty(): void
     {
         foreach (Platform::cases() as $case) {
             $this->assertNotEmpty($case->getLabel(), "Label for {$case->name} should not be empty");
         }
     }
 
-    public function test_all_values_are_string(): void
+    public function testAllValuesAreString(): void
     {
         foreach (Platform::cases() as $case) {
             $this->assertIsString($case->value, "Value for {$case->name} should be string");
         }
     }
 
-    public function test_enum_is_backed_enum(): void
+    public function testEnumIsBackedEnum(): void
     {
         $this->assertInstanceOf(\BackedEnum::class, Platform::WINDOWS);
     }
 
-    public function test_mixFrom_preserves_case_insensitive_matching(): void
+    public function testMixFromPreservesCaseInsensitiveMatching(): void
     {
         // 测试大小写不敏感的匹配
         $testCases = [
